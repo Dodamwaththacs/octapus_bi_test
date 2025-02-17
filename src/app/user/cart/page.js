@@ -37,6 +37,7 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     try {
+      // First create the order
       const orderData = {
         customer: session?.user?.name || "string",
         customerEmail: session?.user?.email || "string",
@@ -45,37 +46,42 @@ export default function Cart() {
           hour: '2-digit',
           minute: '2-digit'
         }),
-        total: total ,
+        total: Math.round(total), // Convert to integer if needed
         status: "pending"
       };
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          
-        }
-      };
   
-      // Make API call
       const response = await axios.post(
         'http://localhost:8080/api/orders',
-        orderData,
-        config
+        orderData
       );
-      console.log(response);
   
       if (response.status === 201) {
-        const orderItems = cartItems.map((item) => ({
-          orderId: response.data.id,
-          itemId: item.id,
-          quantity: item.quantity
-        }));
-
-        const response2 = await axios.post(
-          'http://localhost:8080/api/orderItems',
-          cartItems
-        );
+        const orderId = response.data;
         
-        
+        const itemPromises = cartItems.map(async (item) => {
+          const orderItemData = {
+            quantity: item.quantity,
+            product: item.id,
+            order: orderId,
+            price: Math.round(item.price) // Convert to integer if needed
+          };
+  
+          try {
+            return await axios.post(
+              'http://localhost:8080/api/orderItemss',
+              orderItemData
+            );
+          } catch (error) {
+            console.error(`Failed to add item ${item.id}:`, error);
+            throw error;
+          }
+        });
+  
+        await Promise.all(itemPromises);
+  
+        localStorage.removeItem("pizzaCart");
+        setCartItems([]);
+        setTotal(0);
         alert("Order placed successfully!");
       }
     } catch (error) {
