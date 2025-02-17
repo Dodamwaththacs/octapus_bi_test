@@ -1,57 +1,71 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+"use client";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 export default function Orders() {
+  const [order, setOrders] = useState([]);
+  
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/products");
+        setOrders(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchOrders();
+  }, []);
+
   const orders = [
     {
       id: 1,
-      date: '2022-01-01',
-      status: 'completed',
+      date: "2022-01-01",
+      status: "completed",
       total: 35.99,
       items: [
         {
           id: 1,
-          name: 'Pepperoni Pizza',
+          name: "Pepperoni Pizza",
           price: 14.99,
-          image: '/pizzas/pizza.jpg',
-          quantity: 1
+          image: "/pizzas/pizza.jpg",
+          quantity: 1,
         },
         {
           id: 2,
-          name: 'Margherita Pizza',
+          name: "Margherita Pizza",
           price: 12.99,
-          image: '/pizzas/pizza.jpg',
-          quantity: 1
-        }
-      ]
+          image: "/pizzas/pizza.jpg",
+          quantity: 1,
+        },
+      ],
     },
     {
       id: 2,
-      date: '2022-01-05',
-      status: 'cancelled',
+      date: "2022-01-05",
+      status: "cancelled",
       total: 12.99,
       items: [
         {
           id: 3,
-          name: 'Supreme Pizza',
+          name: "Supreme Pizza",
           price: 16.99,
-          image: '/pizzas/pizza.jpg',
-          quantity: 1
-        }
-      ]
-    }
+          image: "/pizzas/pizza.jpg",
+          quantity: 1,
+        },
+      ],
+    },
   ];
-  
 
   const getStatusColor = (status) => {
     const colors = {
-      'pending': 'bg-yellow-100 text-yellow-800',
-      'processing': 'bg-blue-100 text-blue-800',
-      'completed': 'bg-green-100 text-green-800',
-      'cancelled': 'bg-red-100 text-red-800'
+      pending: "bg-yellow-100 text-yellow-800",
+      processing: "bg-blue-100 text-blue-800",
+      completed: "bg-green-100 text-green-800",
+      cancelled: "bg-red-100 text-red-800",
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -71,14 +85,21 @@ export default function Orders() {
                     {new Date(order.date).toLocaleDateString()}
                   </p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(order.status)}`}>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
+                    order.status
+                  )}`}
+                >
                   {order.status}
                 </span>
               </div>
 
               <div className="space-y-2">
                 {order.items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center py-2 border-b">
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-2 border-b"
+                  >
                     <div className="flex items-center space-x-4">
                       <img
                         src={item.image}
@@ -87,16 +108,23 @@ export default function Orders() {
                       />
                       <div>
                         <p className="font-medium">{item.name}</p>
-                        <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                        <p className="text-sm text-gray-500">
+                          Quantity: {item.quantity}
+                        </p>
                       </div>
                     </div>
-                    <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-medium">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </p>
                   </div>
                 ))}
               </div>
 
               <div className="mt-4 flex justify-between items-center">
-                <p className="text-gray-600">Total Items: {order.items.reduce((acc, item) => acc + item.quantity, 0)}</p>
+                <p className="text-gray-600">
+                  Total Items:{" "}
+                  {order.items.reduce((acc, item) => acc + item.quantity, 0)}
+                </p>
                 <p className="font-bold text-lg">
                   Total: ${order.total.toFixed(2)}
                 </p>

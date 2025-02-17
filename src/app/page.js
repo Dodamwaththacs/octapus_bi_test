@@ -7,6 +7,7 @@ import { useEffect,useState } from "react";
 
 export default function Home() {
   const { data: session } = useSession();
+  const [pizzas, setPizzas] = useState([]);
   
 
 
@@ -15,6 +16,7 @@ export default function Home() {
       try {
         const response = await axios.get("http://localhost:8080/api/products");
         console.log(response.data);
+        setPizzas(response.data);
       } catch (error) {
         console.error("Failed to fetch products", error);
       }
@@ -23,37 +25,37 @@ export default function Home() {
   }
   , []);
 
-  const pizzas = [
-    {
-      id: 1,
-      name: "Pepperoni Pizza",
-      price: 14.99,
-      image: "/pizzas/pizza.jpg",
-      description:
-        "Classic pepperoni with mozzarella cheese on our signature crust",
-    },
-    {
-      id: 2,
-      name: "Margherita Pizza",
-      price: 12.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Fresh tomatoes, mozzarella, basil, and olive oil",
-    },
-    {
-      id: 3,
-      name: "Supreme Pizza",
-      price: 16.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Loaded with veggies, pepperoni, and Italian sausage",
-    },
-    {
-      id: 4,
-      name: "BBQ Chicken Pizza",
-      price: 15.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Grilled chicken, BBQ sauce, red onions, and cilantro",
-    },
-  ];
+  // const pizzas = [
+  //   {
+  //     id: 1,
+  //     name: "Pepperoni Pizza",
+  //     price: 14.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description:
+  //       "Classic pepperoni with mozzarella cheese on our signature crust",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Margherita Pizza",
+  //     price: 12.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Fresh tomatoes, mozzarella, basil, and olive oil",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Supreme Pizza",
+  //     price: 16.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Loaded with veggies, pepperoni, and Italian sausage",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "BBQ Chicken Pizza",
+  //     price: 15.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Grilled chicken, BBQ sauce, red onions, and cilantro",
+  //   },
+  // ];
 
 
   const handleAddToCart = () => {
