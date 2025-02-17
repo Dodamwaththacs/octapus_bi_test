@@ -20,6 +20,7 @@ export const authOptions = {
             Buffer.from(account.access_token.split('.')[1], 'base64').toString()
           );
           token.roles = decodedToken.realm_access?.roles || [];
+          token.email = decodedToken.email;
         }
       }
       return token;
@@ -29,6 +30,7 @@ export const authOptions = {
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.roles = token.roles || [];
+      session.user.email = token.email; 
       return session;
     },
   },

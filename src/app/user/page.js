@@ -1,42 +1,60 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import axios from "axios";
 
 export default function User() {
   const [cart, setCart] = useState([]);
+  const [pizzas, setPizzas] = useState([]);
   
 
-  const pizzas = [
-    {
-      id: 1,
-      name: "Pepperoni Pizza",
-      price: .99,
-      image: "/pizzas/pizza.jpg",
-      description:
-        "Classic pepperoni with mozzarella cheese on our signature crust",
-    },
-    {
-      id: 2,
-      name: "Margherita Pizza",
-      price: 12.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Fresh tomatoes, mozzarella, basil, and olive oil",
-    },
-    {
-      id: 3,
-      name: "Supreme Pizza",
-      price: 16.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Loaded with veggies, pepperoni, and Italian sausage",
-    },
-    {
-      id: 4,
-      name: "BBQ Chicken Pizza",
-      price: 15.99,
-      image: "/pizzas/pizza.jpg",
-      description: "Grilled chicken, BBQ sauce, red onions, and cilantro",
-    },
-  ];
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/products");
+        console.log(response.data);
+        setPizzas(response.data);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      }
+    }
+    fetchProducts();
+  }
+  , []);
+  
+
+  // const pizzas = [
+  //   {
+  //     id: 1,
+  //     name: "Pepperoni Pizza",
+  //     price: .99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description:
+  //       "Classic pepperoni with mozzarella cheese on our signature crust",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Margherita Pizza",
+  //     price: 12.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Fresh tomatoes, mozzarella, basil, and olive oil",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Supreme Pizza",
+  //     price: 16.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Loaded with veggies, pepperoni, and Italian sausage",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "BBQ Chicken Pizza",
+  //     price: 15.99,
+  //     image: "/pizzas/pizza.jpg",
+  //     description: "Grilled chicken, BBQ sauce, red onions, and cilantro",
+  //   },
+  // ];
 
   useEffect(() => {
     const savedCart = localStorage.getItem("pizzaCart");
@@ -95,7 +113,6 @@ export default function User() {
                 Add to Cart
               </button>
             </div>
-            <button onClick={printCart}>Print Cart</button>
           </div>
         ))}
       </div>
