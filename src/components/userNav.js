@@ -71,18 +71,18 @@ export default function GlobalNav() {
           </div>
           <div>
             {session ? (
-              <div className="text-gray-600 hover:text-gray-800 transition-colors">
+              <div className="text-white">
                 <p>Welcome, {session?.user?.name}</p>
                 <button
                   onClick={handleLogout}
-                  className="text-gray-600 hover:text-gray-800 transition-colors"
+                  className="text-white hover:text-red-500 transition-colors"
                 >
                   Logout
                 </button>
               </div>
             ) : (
               <button
-                className="text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-white hover:text-blue-500 transition-colors"
                 onClick={() => signIn("keycloak", { callbackUrl: "/redirect" })}
               >
                 Login

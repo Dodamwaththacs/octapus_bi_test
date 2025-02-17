@@ -1,31 +1,42 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 
 export default function Orders() {
-  const [orders] = useState([
-    {
-      id: "#ORD001",
-      customer: "John Doe",
-      date: "2024-02-17",
-      total: 45.98,
-      status: "pending",
-      items: [
-        { name: "Pepperoni Pizza", quantity: 2, price: 15.99 },
-        { name: "Margherita Pizza", quantity: 1, price: 13.99 },
-      ],
-    },
-    {
-      id: "#ORD002",
-      customer: "Jane Smith",
-      date: "2024-02-16",
-      total: 32.99,
-      status: "completed",
-      items: [
-        { name: "Supreme Pizza", quantity: 1, price: 16.99 },
-        { name: "BBQ Chicken Pizza", quantity: 1, price: 15.99 },
-      ],
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
+  // const [orders] = useState([
+  //   {
+  //     id: "#ORD001",
+  //     customer: "John Doe",
+  //     date: "2024-02-17",
+  //     total: 45.98,
+  //     status: "pending",
+      
+  //   },
+  //   {
+  //     id: "#ORD002",
+  //     customer: "Jane Smith",
+  //     date: "2024-02-16",
+  //     total: 32.99,
+  //     status: "completed",
+      
+  //   },
+  // ]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/orders");
+        console.log("response:", response);
+        setOrders(response.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+
 
   const getStatusColor = (status) => {
     const colors = {
@@ -53,7 +64,7 @@ export default function Orders() {
                   Customer
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                  Time
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -74,7 +85,7 @@ export default function Orders() {
                     {order.customer}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(order.date).toLocaleDateString()}
+                    {order.time}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
